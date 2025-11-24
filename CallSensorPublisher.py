@@ -9,7 +9,7 @@ PY = sys.executable
 processes = []
 
 def start_device(device_id):
-    script = os.path.join(os.path.dirname(__file__), "MultipleDevicePublisher.py")
+    script = os.path.join(os.path.dirname(__file__), "SensorPublisher.py")
     p = subprocess.Popen([PY, script, str(device_id)])
     processes.append(p)
     return p

@@ -1,21 +1,21 @@
 % ================================================================
 %  REAL-TIME MULTI-DEVICE TEMPERATURE MONITORING – THRESHOLD 30°C
-%  Corrected version: Alert now shows EXACT device exceeding temp
+%  Updated with NEW CHANNEL + API KEYS + Correct Field Mapping
 % ================================================================
 
 % -------- Channel Info --------
-readChannelID = 3178278;
-readAPIKey = 'HOSA90F4Z64F0FPF';
+readChannelID = 3178661;                 % NEW CHANNEL ID
+readAPIKey    = 'XD5YM54WWPQVG20K';      % NEW READ KEY
 
-% Field mapping (from your channel)
-fields = [1, 2, 3];
+% Field mapping (temperature only)
+fields = [1, 2, 3];  
 deviceNames = ["Temp_Device1", "Temp_Device2", "Temp_Device3"];
 
-% Fan status field
-fanField = 4;
+% Fan status field (as per new design)
+fanField = 7;                             % Fan status is now field 7
 
 % -------- Alerts Configuration --------
-alertApiKey = "TAK+fuM5ft6GBy73QnU";
+alertApiKey = "TAK+fuM5ft6GBy73QnU";       % NEW ALERT KEY
 alertUrl = "https://api.thingspeak.com/alerts/send";
 
 options = weboptions("HeaderFields", ...
@@ -75,25 +75,12 @@ for i = exceedIdx
 end
 
 % -------- FAN CONTROL LOGIC --------
-fanOn = 1;
+fanOn = 1;  
 fanText = "ON";
 
 fprintf("\nFan turned %s due to high temperature.\n", fanText);
 
-% -------- Update Fan Status on ThingSpeak --------
-writeAPIKey = 'ULUZTT8L75EVEQT7';
-
-%try
-%    thingSpeakWrite(readChannelID, fanOn, ...
-%       "Fields", fanField, "WriteKey", writeAPIKey);
-%   fprintf("Fan status updated on channel.\n");
-%catch
-%    fprintf("Failed to update fan status.\n");
-%end
-
 % -------- SEND IMMEDIATE ALERT --------
-
-% Ensure subject is unique per device to avoid ThingSpeak caching
 mailSubject = sprintf("⚠️ High Temp Alert | Devices: %s | %s", ...
                        strjoin(deviceNames(exceedIdx), ", "), ...
                        string(timeStamp));
